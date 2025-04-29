@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../features/cart/cartSlice";
-import { toast } from "react-hot-toast"; // ✅ Add this line
+import { toast } from "react-hot-toast";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -20,7 +20,7 @@ export default function Products() {
 
         const initialQuantities = {};
         fetchedProducts.forEach((product) => {
-          initialQuantities[product.id] = 0; // Set initial quantity to 0
+          initialQuantities[product.id] = 0;
         });
         setQuantities(initialQuantities);
 
@@ -36,12 +36,12 @@ export default function Products() {
   const handleQuantityChange = (id, delta) => {
     setQuantities((prev) => ({
       ...prev,
-      [id]: Math.max(0, (prev[id] || 0) + delta), // Allow quantity to go down to 0
+      [id]: Math.max(0, (prev[id] || 0) + delta),
     }));
   };
 
   const handleAddToCart = (product) => {
-    const quantity = quantities[product.id] || 0; // Use quantity of 0 if not set
+    const quantity = quantities[product.id] || 0;
 
     const item = {
       id: product.id,
@@ -72,6 +72,16 @@ export default function Products() {
             <h2 className="text-xl font-bold mt-3">{product.title}</h2>
             <p className="text-gray-700 font-semibold mb-2">${product.price}</p>
 
+            {/* ⭐ Ratings with Stars */}
+            <div className="flex items-center text-yellow-500 mb-2">
+              {Array.from({ length: 5 }, (_, i) => (
+                <span key={i}>
+                  {i < Math.round(product.rating) ? "★" : "☆"}
+                </span>
+              ))}
+              <span className="ml-2 text-gray-600 text-sm">({product.rating})</span>
+            </div>
+
             <div className="flex items-center space-x-3 mb-4">
               <button
                 onClick={() => handleQuantityChange(product.id, -1)}
@@ -80,7 +90,7 @@ export default function Products() {
                 −
               </button>
               <span className="text-lg font-semibold">
-                {quantities[product.id] || 0} {/* Default to 0 */}
+                {quantities[product.id] || 0}
               </span>
               <button
                 onClick={() => handleQuantityChange(product.id, 1)}
